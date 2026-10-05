@@ -1,23 +1,83 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar-MA" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI අනාවැකිකරු – තැන්පත් කරන්න</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>هاك بوت برو | التنبؤ بالطائرة والركلات - المغرب 🇲🇦</title>
+
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
   <style>
-    .console-box {
-      font-family: monospace;
-      background-color: #1a1a1a;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 0 20px #00ff88;
-      color: #00ff88;
-      height: 250px;
-      overflow-y: auto;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .loading-screen {
-      font-family: monospace;
+
+    body {
+      background: #050505;
+      font-family: 'Tajawal', 'Segoe UI', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* خلفية متحركة */
+    .bg-animated {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: 
+        radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 68, 204, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(0, 200, 255, 0.05) 0%, transparent 70%),
+        #050505;
+    }
+
+    .bg-animated::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .neon-text {
+      text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88, 0 0 20px #00ff88;
+      animation: flicker 2s infinite;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88; }
+      50% { opacity: 0.95; text-shadow: 0 0 8px #00ff88, 0 0 15px #00ff88, 0 0 25px #00ff88; }
+      100% { opacity: 1; text-shadow: 0 0 5px #00ff88, 0 0 10px #00ff88; }
+    }
+
+    .pulse {
+      animation: pulse-animation 1.2s infinite;
+    }
+
+    @keyframes pulse-animation {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+      70% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(0, 255, 136, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+    }
+
+    .console-loading {
+      font-family: 'Courier New', monospace;
       background: #000;
       color: #00ff88;
       display: flex;
@@ -25,127 +85,965 @@
       justify-content: center;
       height: 100vh;
       flex-direction: column;
-      z-index: 50;
+      z-index: 100;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
     }
-    .hidden-screen { display: none; }
+
+    .console-loading .progress-bar {
+      width: 200px;
+      height: 3px;
+      background: #1a1a1a;
+      border-radius: 10px;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .console-loading .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ff88, #00cc66);
+      border-radius: 10px;
+      animation: loadProgress 2s ease-in-out forwards;
+      box-shadow: 0 0 10px #00ff88;
+    }
+
+    @keyframes loadProgress {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    .hidden-screen {
+      display: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #00ff88;
+      border-radius: 10px;
+    }
+
+    .neon-border {
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+      animation: borderGlow 1.5s infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      from { box-shadow: 0 0 5px rgba(0, 255, 136, 0.3); border-color: #00cc66; }
+      to { box-shadow: 0 0 25px rgba(0, 255, 136, 0.8); border-color: #00ffaa; }
+    }
+
+    .counter-badge {
+      background: rgba(0, 255, 136, 0.15);
+      backdrop-filter: blur(4px);
+      border: 1px solid #00ff88;
+    }
+
+    input {
+      color: #ffffff !important;
+      background-color: #0f172a !important;
+      caret-color: #00ff88;
+    }
+    
+    input::placeholder {
+      color: #94a3b8 !important;
+      opacity: 1;
+    }
+    
+    input:focus {
+      box-shadow: 0 0 15px #00ff88;
+      border-color: #00ff88 !important;
+      outline: none;
+    }
+    
+    .id-input {
+      color: white !important;
+      background: #1e293b !important;
+      border: 2px solid #0affc4;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+    
+    .id-input:focus {
+      background: #0f172a !important;
+      border-color: #ff44cc !important;
+      box-shadow: 0 0 20px #ff44cc;
+    }
+
+    .glow-card {
+      background: rgba(10, 20, 30, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(0, 255, 200, 0.9);
+      box-shadow: 0 0 30px rgba(0, 255, 200, 0.5), inset 0 0 15px rgba(0, 255, 200, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glow-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(0, 255, 200, 0.1), transparent, rgba(255, 68, 204, 0.1), transparent);
+      animation: rotate 6s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes rotate {
+      100% { transform: rotate(360deg); }
+    }
+
+    .glow-card:hover {
+      transform: scale(1.01);
+      border-color: #ff44cc;
+      box-shadow: 0 0 40px rgba(255, 68, 204, 0.6), inset 0 0 20px rgba(255, 68, 204, 0.3);
+    }
+
+    /* بطاقة الفائزين الفاخرة */
+    .winners-premium {
+      background: linear-gradient(135deg, #1a1508 0%, #0f0c07 50%, #1a1208 100%);
+      border: 2px solid #f5b81b;
+      box-shadow: 0 0 30px rgba(245, 184, 27, 0.5), inset 0 1px 0 rgba(255,215,0,0.3);
+      border-radius: 2rem;
+      padding: 2rem 1.2rem;
+      position: relative;
+      backdrop-filter: blur(4px);
+      overflow: hidden;
+    }
+
+    .winners-premium::before {
+      content: "🏆";
+      position: absolute;
+      top: -18px;
+      right: 25px;
+      font-size: 2.2rem;
+      background: #0a0a0a;
+      padding: 0 12px;
+      border-radius: 40px;
+      text-shadow: 0 0 12px gold;
+      border: 1px solid rgba(245, 184, 27, 0.5);
+    }
+
+    .winners-premium::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 80% 20%, rgba(245, 184, 27, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .winners-premium h3 {
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .winner-item {
+      background: linear-gradient(135deg, #000000dd, #0a0a0add);
+      border-right: 5px solid #f5b81b;
+      transition: 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border-radius: 1rem;
+      padding: 1rem 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .winner-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 5px;
+      height: 100%;
+      background: linear-gradient(180deg, #fbbf24, #f59e0b);
+      box-shadow: 0 0 15px #fbbf24;
+    }
+
+    .winner-item:hover {
+      transform: translateX(-8px);
+      border-right-color: #ffdd55;
+      box-shadow: 0 0 25px rgba(245,184,27,0.7);
+      background: linear-gradient(135deg, #000000ee, #111111ee);
+    }
+
+    .winner-id {
+      font-family: 'Courier New', monospace;
+      font-weight: 700;
+      background: #000000aa;
+      padding: 0.2rem 0.7rem;
+      border-radius: 40px;
+      letter-spacing: 1px;
+      color: #fde047;
+      font-size: 0.9rem;
+      border: 1px solid rgba(245,200,50,0.5);
+      display: inline-block;
+    }
+
+    .winner-amount {
+      font-weight: 800;
+      font-size: 1.3rem;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 8px rgba(245,158,11,0.5);
+    }
+
+    .winner-time {
+      font-size: 0.7rem;
+      color: #d97706;
+      background: rgba(0,0,0,0.6);
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      .winner-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+      .winner-amount {
+        font-size: 1.1rem;
+      }
+    }
+
+    .verify-text {
+      color: #ffffff !important;
+      text-shadow: 0 0 8px rgba(0,255,200,0.5);
+      background: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-weight: 500;
+    }
+
+    .winners-verified {
+      color: #facc15 !important;
+      font-weight: bold;
+      text-shadow: 0 0 5px rgba(250,204,21,0.5);
+      background: rgba(0,0,0,0.6);
+      display: inline-block;
+      padding: 0.25rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+    }
+
+    .retiros-text {
+      color: #facc15 !important;
+      font-weight: 800;
+      text-shadow: 0 0 8px rgba(0,0,0,0.8), 0 0 5px #000000;
+      background: rgba(0,0,0,0.7);
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    .signal-button {
+      background: linear-gradient(135deg, #00ff88, #00cc66) !important;
+      color: #000000 !important;
+      font-weight: 900 !important;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+      border: 2px solid #ffffffcc !important;
+      box-shadow: 0 0 20px rgba(0,255,136,0.8), 0 4px 10px rgba(0,0,0,0.5) !important;
+      transition: all 0.2s ease;
+    }
+
+    .signal-button:hover {
+      transform: scale(1.02);
+      background: linear-gradient(135deg, #22ff99, #00dd77) !important;
+      box-shadow: 0 0 28px rgba(0,255,136,1) !important;
+      border-color: white !important;
+    }
+
+    .connect-main-button {
+      background: linear-gradient(135deg, #00ffcc, #00cc99) !important;
+      color: #000000 !important;
+      font-weight: 900 !important;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.4);
+      border: 2px solid #f0f0f0cc !important;
+      box-shadow: 0 0 22px rgba(0,255,200,0.9), 0 4px 12px rgba(0,0,0,0.6) !important;
+      transition: all 0.2s ease;
+    }
+
+    .connect-main-button:hover {
+      transform: scale(1.02);
+      background: linear-gradient(135deg, #22ffdd, #00ddaa) !important;
+      box-shadow: 0 0 30px rgba(0,255,210,1) !important;
+      border-color: white !important;
+    }
+
+    /* بطاقات أوضاع اللعب */
+    .game-mode-card {
+      background: radial-gradient(circle at 20% 30%, rgba(255, 50, 100, 0.15), rgba(0, 200, 255, 0.1));
+      backdrop-filter: blur(8px);
+      border: 1.5px solid;
+      border-image: linear-gradient(135deg, #ff3366, #00e0ff) 1;
+      animation: rgbPulse 2s infinite alternate;
+      box-shadow: 0 10px 25px -5px rgba(0, 255, 255, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .game-mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      transition: 0.5s;
+    }
+
+    .game-mode-card:hover::before {
+      left: 100%;
+    }
+
+    .game-mode-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 35px -8px #ff44aa80, 0 0 25px #00ccffff;
+      border-width: 2px;
+    }
+
+    @keyframes rgbPulse {
+      0% { border-color: #ff3366; box-shadow: 0 0 8px #ff3366; }
+      100% { border-color: #00e0ff; box-shadow: 0 0 20px #00e0ff; }
+    }
+
+    .game-mode-card .emoji-big {
+      filter: drop-shadow(0 0 5px cyan);
+    }
+
+    .game-mode-card h4 {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #a5f3ff, #00e0ff, #2dd4bf);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 15px rgba(0,224,255,0.6);
+      letter-spacing: 1px;
+    }
+
+    .precision-badge {
+      background: linear-gradient(135deg, #0a2f2f, #041a1a);
+      border: 1px solid #00ffcc;
+      border-radius: 30px;
+      padding: 0.25rem 1rem;
+      display: inline-block;
+      font-weight: bold;
+      color: #b2f5ea;
+      box-shadow: 0 0 12px rgba(0,255,200,0.4);
+      backdrop-filter: blur(4px);
+      font-size: 0.8rem;
+    }
+
+    .section-divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #0affaa, #ff44cc, #0affaa, transparent);
+      width: 70%;
+      margin: 2rem auto;
+    }
+
+    .winner-name {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.08);
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* شارة المغرب */
+    .morocco-badge {
+      background: linear-gradient(135deg, #c1272d, #006233);
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 15px rgba(193, 39, 45, 0.5);
+    }
+
+    /* تأثير الظهور */
+    .fade-in {
+      animation: fadeIn 0.6s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-delay-1 { animation-delay: 0.1s; }
+    .fade-in-delay-2 { animation-delay: 0.2s; }
+    .fade-in-delay-3 { animation-delay: 0.3s; }
+    .fade-in-delay-4 { animation-delay: 0.4s; }
+
+    /* شريط الثقة */
+    .trust-bar {
+      background: linear-gradient(90deg, rgba(0,255,136,0.1), rgba(0,255,200,0.15), rgba(0,255,136,0.1));
+      border: 1px solid rgba(0,255,136,0.3);
+      border-radius: 40px;
+      padding: 0.4rem 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* تحسين الأزرار */
+    .btn-glow {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-glow::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+      opacity: 0;
+      transition: 0.5s;
+    }
+
+    .btn-glow:hover::after {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+
+    /* تحسين بطاقة الإيداع */
+    .deposit-card {
+      background: linear-gradient(135deg, #1a0a0a, #0a0505);
+      border: 2px solid #ff4444;
+      box-shadow: 0 0 30px rgba(255, 68, 68, 0.4);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+    }
+
+    /* شريط الحالة المباشر */
+    .live-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,0,0,0.6);
+      padding: 0.3rem 0.8rem;
+      border-radius: 30px;
+      border: 1px solid rgba(0,255,136,0.3);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: livePulse 1s infinite;
+      box-shadow: 0 0 10px #00ff88;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* تحسين القائمة */
+    .feature-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .feature-item {
+      background: rgba(0,255,136,0.08);
+      border: 1px solid rgba(0,255,136,0.2);
+      border-radius: 30px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.75rem;
+      color: #a7f3d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* إحصائيات */
+    .stat-box {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,255,200,0.2);
+      border-radius: 1rem;
+      padding: 0.8rem;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .stat-box:hover {
+      border-color: rgba(0,255,200,0.6);
+      box-shadow: 0 0 20px rgba(0,255,200,0.2);
+      transform: translateY(-3px);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ff88, #00cc66);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: #94a3b8;
+      margin-top: 0.2rem;
+    }
   </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-  <div id="loading" class="loading-screen">
-    <p>පූරණය වෙමින්... අපි ඔබේ අත්දැකීම වින්‍යාස කරන තෙක් රැඳී සිටින්න.</p>
+<body>
+
+  <div class="bg-animated"></div>
+
+  <!-- شاشة التحميل -->
+  <div id="loading" class="console-loading">
+    <div class="text-3xl mb-4">🇲🇦 هاك بوت برو</div>
+    <div class="text-sm">جاري تهيئة خوارزميات التنبؤ...</div>
+    <div class="text-xs mt-2 opacity-70">تحميل خوادم المغرب 🇲🇦</div>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div class="text-xs mt-3 opacity-50" id="loadingStatus">جاري الاتصال بالخادم...</div>
   </div>
+
+  <!-- المحتوى الرئيسي -->
   <div id="mainContent" class="hidden-screen">
-    <header class="w-full bg-gray-800 p-4 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-green-400">1xbet AI පුරෝකථනය කරන්නා</h1>
-      <nav class="space-x-4">
-        <a href="#how" class="hover:text-green-400">එය ක්රියා කරන ආකාරය</a>
-        <a href="#games" class="hover:text-green-400">ක්රීඩා</a>
-        <a href="#start" class="hover:text-green-400">ආරම්භ කිරීමට</a>
-      </nav>
+
+    <!-- رأس الصفحة -->
+    <header class="fixed top-0 w-full bg-black/90 backdrop-blur-md p-3 flex justify-between items-center border-b border-green-500/50 z-50">
+      <h1 class="text-base md:text-xl font-bold text-green-400 neon-text flex items-center gap-2">
+        🤖 هاك بوت برو
+        <span class="morocco-badge text-xs px-2 py-0.5 rounded-full text-white hidden md:inline-block">🇲🇦 المغرب</span>
+      </h1>
+      <div class="counter-badge rounded-full px-3 py-1 text-xs font-mono flex items-center gap-1.5">
+        <span class="live-dot"></span>
+        <span id="onlineCount">312</span> متصل
+      </div>
     </header>
-    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-      <h2 class="text-3xl md:text-5xl font-bold mb-6">
-        AI ක්‍රීඩා අනාවැකි සමඟ සැබෑ මුදල් උපයන්න
-      </h2>
-      <div class="mb-4 text-lg font-semibold text-yellow-300">
-        👋 සුභ පැතුම් සහ නිල සේවයට සාදරයෙන් පිළිගනිමු <span class="text-green-400">Ruwan</span> !
-      </div>
-      <p class="max-w-xl mb-8 text-gray-300">
-        ගුවන් නියමුවන්, පතල් සහ දඬුවම් ඔට්ටු ඇල්ලීමේදී අපගේ බුද්ධිමත් AI සමඟ ජයග්‍රහණය කරන දහස් ගණනක් පරිශීලකයින් හා එක්වන්න. 98% නිරවද්‍යතාවය, තත්‍ය කාලීන අනාවැකි සහ ක්ෂණික මුදල් ආපසු ගැනීම්. !
-      </p>
-      <!-- ID input for connection -->
-      <input id="userId" type="text" placeholder="ඔබගේ පරිශීලක නාමය ඇතුලත් කරන්න" class="bg-gray-700 text-white p-3 rounded-md mb-4" />
-      <button id="connectButton" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-xl text-lg transition">START HACK</button>
-      <!-- Success message -->
-      <div id="connectionSuccess" class="hidden text-green-400 font-bold mt-6">
-        <p>ගිණුම් හැඳුනුම්පත : <span id="accountIdDisplay">1234567890</span> සාර්ථකව සම්බන්ධ විය !</p>
-        <p>තත්ත්වය : ක්රියාකාරී | 100% පුරෝකථන නිරවද්‍යතාවය | AI ඇල්ගොරිතම විශ්ලේෂණය කරන ලදී</p>
-        <button id="getSignalButton" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl text-lg transition mt-4">Obtenir un signal</button>
-      </div>
-      <!-- Error message for deposit + PROMOCODE block -->
-      <div id="errorBox" class="hidden bg-red-600 p-6 rounded-xl max-w-md mx-auto mt-6">
-        <h2 class="text-xl font-bold mb-2">⚠️ තැන්පතු හමු නොවීය</h2>
-        <p class="mb-4">ඔබගේ ශේෂය හිස් බව පෙනේ. කරුණාකර තැන්පතුවක් කරන්න <strong>2000 LKR</strong> සංඥා වෙත ප්‍රවේශය අගුළු ඇර ජයග්‍රහණය ආරම්භ කිරීමට !</p>
-        <a href="https://reffpa.com/L?tag=d_4628653m_97c_bat_[]general[]_d173877_l213928_adaptive_banner&site=4628653&ad=97&r=registration" target="_blank" id="depositButton" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg transition">
-          දැන් 1xbet මත තැන්පත් කරන්න
-        </a>
-        <!-- Промокод и напоминание -->
-        <div class="mt-6 bg-red-800 text-white p-4 rounded-lg font-bold text-center">
-           <div class="mb-1 text-lg">ඔබේ ප්‍රවර්ධන කේතය : <span class="bg-black p-1 rounded text-green-400">ALX55</span></div>
-<div>ලියාපදිංචි වීමට අමතක නොකරන්න. <span class="underline">අද්විතීය ලෙස</span> සියලුම විශේෂාංග වෙත ප්‍රවේශ වීමට මෙම ප්‍රවර්ධන කේතය භාවිතා කරන්න.&nbsp;!</div>
+
+    <main class="pt-20 pb-10 px-4 max-w-6xl mx-auto">
+
+      <!-- القسم الرئيسي -->
+      <section class="text-center mb-12 fade-in">
+        <div class="inline-flex items-center gap-2 bg-green-500/20 text-green-400 rounded-full px-4 py-1.5 text-sm mb-4 border border-green-500/50">
+          🔥 النسخة الرسمية للمغرب | هاك بوت v3.0
+        </div>
+        <h2 class="text-3xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-green-300 via-emerald-400 to-green-600 bg-clip-text text-transparent leading-tight">
+          ربح بالذكاء الاصطناعي اللي كيتنبأ<br>
+          <span class="text-yellow-400">قبل ما تطيح الطيارة</span>
+        </h2>
+        <p class="text-gray-400 max-w-xl mx-auto text-sm md:text-base">
+          خوارزمية مدربة على <strong class="text-green-400">+50,000 جولة</strong> من الطيارة، الركلات، والألغام.
+          دقة مثبتة: <span class="text-yellow-400 font-bold">97.8%</span>
+        </p>
+        
+        <div class="feature-list mt-5">
+          <span class="feature-item">✅ بلا حدود فالسحب</span>
+          <span class="feature-item">✅ دعم 24/7</span>
+          <span class="feature-item">✅ تحديث يومي</span>
+          <span class="feature-item">✅ خاص بالمغرب 🇲🇦</span>
+        </div>
+      </section>
+
+      <!-- إحصائيات سريعة -->
+      <section class="grid grid-cols-3 gap-3 max-w-2xl mx-auto mb-10 fade-in fade-in-delay-1">
+        <div class="stat-box">
+          <div class="stat-value">97.8%</div>
+          <div class="stat-label">دقة التنبؤ</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">+15K</div>
+          <div class="stat-label">مستخدم نشط</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">24/7</div>
+          <div class="stat-label">دعم مباشر</div>
+        </div>
+      </section>
+
+      <!-- ====== قسم ربط الحساب ====== -->
+      <div class="max-w-md mx-auto mb-12 fade-in fade-in-delay-2">
+        <div class="glow-card rounded-2xl p-6 md:p-8 shadow-2xl transition-all">
+          <div class="text-center mb-6">
+            <div class="text-5xl mb-2 animate-pulse">🔐✨</div>
+            <h3 class="text-2xl font-extrabold bg-gradient-to-r from-cyan-300 to-pink-400 bg-clip-text text-transparent">
+              ربط الحساب ديالك ف 1xBet
+            </h3>
+            <p class="verify-text text-sm mt-2">🔍 كنتحققو من المعرف ونفعّلو الإشارات الحصرية</p>
+          </div>
+
+          <input
+            id="userId"
+            type="text"
+            placeholder="مثال: 1234567890"
+            class="id-input w-full p-3 rounded-xl text-center border-2 border-cyan-400 focus:border-pink-500 outline-none transition text-base font-mono"
+            style="color: white !important; background: #0f172a !important;"
+          />
+
+          <button
+            id="connectButton"
+            class="connect-main-button btn-glow w-full mt-4 font-bold py-3 rounded-xl text-lg transition transform hover:scale-[1.02] shadow-xl"
+          >
+            🚀 ربط وتفعيل البوت
+          </button>
+
+          <div id="connectionSuccess" class="hidden text-green-400 font-bold mt-6 text-center space-y-2">
+            <p>✅ المعرف: <span id="accountIdDisplay"></span> تربط بنجاح</p>
+            <p class="text-sm">🔓 خادم المغرب: <span class="text-cyan-300">نشط</span></p>
+            <button
+              id="getSignalButton"
+              class="signal-button btn-glow w-full font-bold py-3 rounded-xl text-lg transition transform hover:scale-[1.02] shadow-xl"
+            >
+              🎯 الحصول على إشارة تنبؤية
+            </button>
+          </div>
         </div>
       </div>
-    </section>
-    <!-- Остальное без изменений -->
-    <section class="bg-gray-800 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">Gagnants du jour (XAF)</h3>
-      <div class="grid md:grid-cols-2 gap-4 text-left max-w-4xl mx-auto text-sm text-green-300">
-        <p>👤 පරිශීලක ID : 1218473422 – 275 328 LKR</p>
-        <p>👤 පරිශීලක ID : 9912384741 – 221 900 LKR</p>
-        <p>👤 පරිශීලක ID : 3099234822 – 184 120 LKR</p>
-        <p>👤 පරිශීලක ID : 1187339121 – 150 000 LKR</p>
-        <p>👤 පරිශීලක ID : 4412900113 – 132 850 LKR</p>
-        <p>👤 පරිශීලක ID : 8283721091 – 128 440 LKR</p>
-        <p>👤 පරිශීලක ID : 7751937742 – 100 705 LKR</p>
-        <p>👤 පරිශීලක ID : 5554921811 – 98 330 LKR</p>
-        <p>👤 පරිශීලක ID : 1983238742 – 85 000 LKR</p>
-        <p>👤 පරිශීලක ID : 3377749301 – 79 210 LKR</p>
-      </div>
-    </section>
-    <section id="games" class="bg-gray-800 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">සහය දක්වන ක්‍රීඩා</h3>
-      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">🎮 Aviator</h4>
-          <p class="text-gray-300">ගුවන් යානය ගුවන් ගත වීමට පෙර ආපසු යා යුතු වේලාව පුරෝකථනය කරන්න! අපගේ AI තථ්‍ය කාලීනව ප්‍රවණතා හඳුනා ගනී.</p>
+
+      <!-- ====== صندوق الخطأ (الإيداع) ====== -->
+      <div id="errorBox" class="hidden mt-8 fade-in">
+        <div class="neon-border bg-gradient-to-br from-red-950/80 to-black rounded-2xl p-6 md:p-8 text-center max-w-md mx-auto">
+          <div class="text-5xl mb-3">⚠️</div>
+          <h3 class="text-2xl font-bold text-yellow-400 mb-2">الرصيد ما كافيش</h3>
+          <p class="text-gray-300 mb-4 text-sm">
+            باش تفتح <strong class="text-green-400">هاك بوت برو</strong> خاصك إيداع نشط ف 1xBet.
+          </p>
+          <div class="bg-black/50 rounded-xl p-4 mb-5">
+            <p class="text-sm text-gray-400">الحد الأدنى للإيداع المطلوب:</p>
+            <p class="text-3xl font-bold text-green-400">70 درهم مغربي</p>
+            <p class="text-xs text-gray-500 mt-1">(تقريباً 7 دولار أمريكي)</p>
+          </div>
+
+          <a
+            href="https://reffpa.com/L?tag=d_5791687m_21123c_&site=5791687&ad=21123&r=registration"
+            target="_blank"
+            id="depositButton"
+            class="inline-block w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-bold py-3 px-6 rounded-xl transition text-lg pulse"
+          >
+            💰 إيداع ف 1xBet
+          </a>
+
+          <div class="mt-5 bg-gray-900 rounded-xl p-3">
+            <p class="text-sm text-gray-300">🎁 الكود الترويجي النشط:</p>
+            <p class="text-2xl font-mono font-bold text-green-400 tracking-wider">MCO444</p>
+            <p class="text-xs text-gray-500 mt-1">استعمل هاد الكود عند الإيداع → <span class="text-yellow-400">+100% مكافأة</span></p>
+          </div>
+
+          <div class="mt-4 text-xs text-gray-500 border-t border-gray-700 pt-3">
+            ⏳ العرض صالح لمدة <span id="countdownTimer" class="text-yellow-400 font-mono">47:59:59</span> للمستخدمين الموثقين
+          </div>
         </div>
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">💣 Mines</h4>
-          <p class="text-gray-300">බෝම්බ වලින් වළකින්න, ත්‍යාග එකතු කරන්න. අපගේ පද්ධතිය උපරිම ලාභය සඳහා අවම අවදානම් මාර්ග සොයා ගනී.</p>
+      </div>
+
+      <!-- ====== قسم آخر الفائزين ====== -->
+      <section class="mt-16 winners-premium fade-in fade-in-delay-3">
+        <div class="text-center mb-6 relative z-10">
+          <span class="text-yellow-300 text-sm bg-black/60 px-4 py-1 rounded-full border border-yellow-500">
+            🔥 تحديث مباشر
+          </span>
+          <h3 class="text-2xl md:text-4xl font-extrabold mt-3 bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">
+            آخر الفائزين مع هاك بوت برو
+          </h3>
+          <p class="retiros-text mt-3">✅ عمليات سحب موثقة ف الوقت الحقيقي</p>
         </div>
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">🥅 Penalty</h4>
-          <p class="text-gray-300">වෙඩි තැබිය යුතු හෝ කිමිදිය යුතු ස්ථානය දැනගන්න. දත්ත මත පදනම් වූ අනාවැකි සමඟ ගෝල රකින්නා පරාජය කරන්න.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+          <div class="winner-item">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="winner-id">👤 ****<span id="winner1" class="font-bold text-yellow-300">5521</span></span>
+              <span class="winner-name">ياسين العلمي</span>
+            </div>
+            <div class="winner-amount">
+              💰 <span id="amount1">430</span> درهم
+            </div>
+            <div class="winner-time">
+              🕒 منذ 3 دقائق
+            </div>
+          </div>
+          <div class="winner-item">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="winner-id">👤 ****<span id="winner2" class="font-bold text-yellow-300">4518</span></span>
+              <span class="winner-name">فاطمة الزهراء</span>
+            </div>
+            <div class="winner-amount">
+              💰 <span id="amount2">520</span> درهم
+            </div>
+            <div class="winner-time">
+              🕒 منذ 7 دقائق
+            </div>
+          </div>
+          <div class="winner-item">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="winner-id">👤 ****<span id="winner3" class="font-bold text-yellow-300">9476</span></span>
+              <span class="winner-name">مهدي بنكيران</span>
+            </div>
+            <div class="winner-amount">
+              💰 <span id="amount3">680</span> درهم
+            </div>
+            <div class="winner-time">
+              🕒 منذ 12 دقيقة
+            </div>
+          </div>
+          <div class="winner-item">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="winner-id">👤 ****<span id="winner4" class="font-bold text-yellow-300">4412</span></span>
+              <span class="winner-name">سلمى بنعلي</span>
+            </div>
+            <div class="winner-amount">
+              💰 <span id="amount4">750</span> درهم
+            </div>
+            <div class="winner-time">
+              🕒 منذ 22 دقيقة
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-6">
+          <span class="winners-verified">⚡ فائزون موثقون بواسطة نظام هاك بوت | الذكاء الاصطناعي نشط 24/7</span>
+        </div>
+        <p class="text-center text-yellow-500/60 text-xs mt-3">
+          🇲🇦 متوسط الأرباح اليومية للمستخدمين المغاربة: 3500-7500 درهم مغربي
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- ====== قسم أوضاع الاختراق النشطة ====== -->
+      <section class="mt-8 mb-8 fade-in fade-in-delay-4">
+        <h3 class="text-3xl font-bold text-center mb-10 bg-gradient-to-r from-pink-500 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          🎮 أوضاع الاختراق النشطة 🔥
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- الطيارة -->
+          <div class="game-mode-card rounded-2xl p-6 text-center transition-all duration-300">
+            <div class="text-6xl mb-3 emoji-big animate-bounce">✈️💥</div>
+            <h4 class="text-2xl font-black" style="background: linear-gradient(135deg, #a5f3ff, #00e0ff, #2dd4bf); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 15px rgba(0,224,255,0.6);">
+              الطيارة
+            </h4>
+            <p class="text-gray-200 text-sm font-medium mt-2">
+              كشف الانهيار مع <span class="text-pink-400 font-bold">30 ثانية قبل</span>
+            </p>
+            <div class="mt-4">
+              <span class="precision-badge">🔮 الدقة: 98.2%</span>
+            </div>
+          </div>
+          <!-- الألغام -->
+          <div class="game-mode-card rounded-2xl p-6 text-center transition-all duration-300">
+            <div class="text-6xl mb-3 emoji-big animate-pulse">💣💎</div>
+            <h4 class="text-2xl font-black text-purple-300">الألغام</h4>
+            <p class="text-gray-200 text-sm font-medium mt-2">
+              مسح الحقول الخالية من الألغام + الأنماط
+            </p>
+            <div class="mt-4 bg-black/50 rounded-full p-1 text-xs text-purple-200">🎯 دقة 96.5%</div>
+          </div>
+          <!-- الركلات -->
+          <div class="game-mode-card rounded-2xl p-6 text-center transition-all duration-300">
+            <div class="text-6xl mb-3 emoji-big">⚽🧤</div>
+            <h4 class="text-2xl font-black text-green-300">ركلات الجزاء</h4>
+            <p class="text-gray-200 text-sm font-medium mt-2">
+              التنبؤ بالهدف أو الفشل بنسبة <span class="text-green-400">92%</span>
+            </p>
+            <div class="mt-4 bg-black/50 rounded-full p-1 text-xs text-green-300">📊 ذكاء اصطناعي متقدم ف الوقت الفعلي</div>
+          </div>
+        </div>
+        <p class="text-center text-gray-400 text-sm mt-8 border-t border-gray-800 pt-4 italic">
+          ⚡ الأوضاع الثلاثة نشطة فنفس الوقت لأعضاء هاك بوت برو ⚡
+        </p>
+      </section>
+
+      <!-- شريط الثقة -->
+      <div class="text-center mt-8 fade-in fade-in-delay-4">
+        <div class="trust-bar">
+          <span class="text-green-400">🔒</span>
+          <span class="text-xs text-gray-300">معلوماتك محمية بتشفير 256-bit</span>
+          <span class="text-green-400">✅</span>
         </div>
       </div>
-    </section>
-    <section id="how" class="bg-gray-900 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">Comment ça marche</h3>
-      <div class="max-w-3xl mx-auto space-y-4 text-gray-300">
-        <p>📡 අපගේ AI සජීවී දත්ත සහ ඓතිහාසික ක්‍රීඩා දත්ත 24/7 විශ්ලේෂණය කරයි.</p>
-        <p>💡 ස්ථාවර ජයග්‍රහණ සඳහා ඉඩ සලසන රටා ඇය හඳුනා ගනී..</p>
-        <p>📲 ඔබට තත්‍ය කාලීනව විශ්වාසදායක සංඥා ලැබේ — කෙලින්ම ඔබගේ උපාංගයට.</p>
-      </div>
-    </section>
-    <section class="bg-black py-12 px-6 text-center">
-      <h3 class="text-xl font-bold text-green-400 mb-4">[ Console – Journal de surveillance ]</h3>
-      <div class="console-box max-w-3xl mx-auto text-left" id="console">
-        <p>[INFO] ක්රියාකාරී අනාවැකි සේවාව ✅</p>
-      </div>
-    </section>
-    <footer class="text-center text-gray-500 text-sm py-6">
-      © 2025 AI Predictor. 1xbet සමඟ අනුබද්ධ නොවේ. වගකීමෙන් යුතුව භාවිතා කරන්න.
-    </footer>
+
+      <!-- تذييل الصفحة -->
+      <footer class="text-center text-gray-600 text-xs mt-16 pt-6 border-t border-gray-800">
+        <p>© 2026 هاك بوت برو — حصري للمغرب 🇲🇦</p>
+        <p class="mt-1">العب بمسؤولية. +18</p>
+      </footer>
+
+    </main>
   </div>
+
   <script>
+    // شاشة التحميل
+    const loadingStatus = document.getElementById("loadingStatus");
+    const statusMessages = [
+      "جاري الاتصال بالخادم...",
+      "تحميل خوارزميات التنبؤ...",
+      "تهيئة الذكاء الاصطناعي...",
+      "الاتصال بخوادم المغرب 🇲🇦...",
+      "جاري التحقق من الأمان...",
+      "البوت جاهز! 🚀"
+    ];
+    
+    let msgIndex = 0;
+    const msgInterval = setInterval(() => {
+      if (msgIndex < statusMessages.length - 1) {
+        msgIndex++;
+        loadingStatus.innerText = statusMessages[msgIndex];
+      }
+    }, 350);
+
     setTimeout(() => {
+      clearInterval(msgInterval);
       document.getElementById("loading").classList.add("hidden-screen");
       document.getElementById("mainContent").classList.remove("hidden-screen");
-    }, 3000);
-    document.getElementById("connectButton").addEventListener("click", () => {
-      const userId = document.getElementById("userId").value;
-      if (userId) {
-        document.getElementById("accountIdDisplay").innerText = userId;
-        document.getElementById("connectionSuccess").classList.remove("hidden");
-        document.getElementById("errorBox").classList.add("hidden");
+    }, 2200);
+
+    // عدد المستخدمين المتصلين
+    let online = 312;
+    setInterval(() => {
+      let change = Math.floor(Math.random() * 5) - 2;
+      let newOnline = online + change;
+      if (newOnline > 220 && newOnline < 450) {
+        online = newOnline;
+      }
+      document.getElementById("onlineCount") && (document.getElementById("onlineCount").innerText = online);
+    }, 8000);
+
+    // الفائزين الديناميكيين - أسماء ومبالغ مغربية
+    const winnersList = [
+      { id: "5521", amount: "430", name: "ياسين العلمي" },
+      { id: "4518", amount: "520", name: "فاطمة الزهراء" },
+      { id: "9476", amount: "680", name: "مهدي بنكيران" },
+      { id: "4412", amount: "750", name: "سلمى بنعلي" },
+      { id: "3382", amount: "395", name: "عمر الفاسي" },
+      { id: "7741", amount: "610", name: "نور الهدى" },
+      { id: "8893", amount: "540", name: "أمين الطنجاوي" },
+      { id: "2217", amount: "710", name: "خديجة المراكشية" },
+      { id: "6654", amount: "480", name: "رشيد الرباطي" },
+      { id: "3329", amount: "630", name: "هند الوزاني" },
+      { id: "9981", amount: "560", name: "كريم الدكالي" },
+      { id: "1124", amount: "700", name: "زينب السلاوي" }
+    ];
+
+    function updateWinners() {
+      if (document.getElementById("winner1")) {
+        let shuffled = [...winnersList];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        for (let i = 1; i <= 4; i++) {
+          const winner = shuffled[i - 1];
+          document.getElementById(`winner${i}`).innerText = winner.id;
+          document.getElementById(`amount${i}`).innerText = winner.amount;
+          const nameElements = document.querySelectorAll('.winner-name');
+          if (nameElements[i - 1]) {
+            nameElements[i - 1].innerText = winner.name;
+          }
+        }
+      }
+    }
+    updateWinners();
+    setInterval(updateWinners, 15000);
+
+    // مؤقت 48 ساعة
+    let timeLeft = 48 * 60 * 60;
+    function updateTimer() {
+      if (document.getElementById("countdownTimer")) {
+        let hours = Math.floor(timeLeft / 3600);
+        let minutes = Math.floor((timeLeft % 3600) / 60);
+        let seconds = timeLeft % 60;
+        document.getElementById("countdownTimer").innerText = 
+          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        if (timeLeft > 0) timeLeft--;
+      }
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    // ربط الحساب
+    const connectBtn = document.getElementById("connectButton");
+    const userIdInput = document.getElementById("userId");
+    const connectSuccessDiv = document.getElementById("connectionSuccess");
+    const accountIdDisplay = document.getElementById("accountIdDisplay");
+    const getSignalBtn = document.getElementById("getSignalButton");
+    const errorBox = document.getElementById("errorBox");
+
+    if (userIdInput) {
+      userIdInput.style.color = "#ffffff";
+      userIdInput.style.backgroundColor = "#0f172a";
+    }
+
+    connectBtn.addEventListener("click", () => {
+      const userId = userIdInput.value.trim();
+      if (userId.length >= 4) {
+        connectBtn.innerText = "⏳ جاري الربط...";
+        setTimeout(() => {
+          connectBtn.classList.add("hidden");
+          userIdInput.classList.add("hidden");
+          accountIdDisplay.innerText = userId;
+          connectSuccessDiv.classList.remove("hidden");
+        }, 1200);
+      } else {
+        alert("عافاك دخل معرف صالح ديال 1xBet (4 أرقام على الأقل)");
       }
     });
-    document.getElementById("getSignalButton").addEventListener("click", () => {
-      document.getElementById("errorBox").classList.remove("hidden");
+
+    if (getSignalBtn) {
+      getSignalBtn.addEventListener("click", () => {
+        errorBox.classList.remove("hidden");
+        window.scrollTo({ top: errorBox.offsetTop - 80, behavior: "smooth" });
+      });
+    }
+
+    // تأثير الظهور عند التمرير
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
     });
   </script>
 </body>
